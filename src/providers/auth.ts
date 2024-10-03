@@ -16,7 +16,7 @@ export const authProvider: AuthProvider = {
   login: async ({ email }) => {
     try {
       const { data } = await dataProvider.custom({
-        url: API_URL,
+        url: `${API_URL}/login`,
         method: "post",
         headers: {},
         meta: {

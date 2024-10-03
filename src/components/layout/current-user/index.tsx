@@ -5,11 +5,11 @@ import { useGetIdentity } from "@refinedev/core";
 import { SettingOutlined } from "@ant-design/icons";
 import { Button, Popover } from "antd";
 
-// import type { User } from "@/graphql/schema.types";
+import type { User } from "@/graphql/schema.types";
 
-// import { CustomAvatar } from "../../custom-avatar";
-// import { Text } from "../../text";
-// import { AccountSettings } from "../account-settings";
+import { CustomAvatar } from "../../custom-avatar";
+import { Text } from "../../text";
+import { AccountSettings } from "../account-settings";
 
 export const CurrentUser = () => {
   const [opened, setOpened] = React.useState(false);
@@ -22,14 +22,14 @@ export const CurrentUser = () => {
         flexDirection: "column",
       }}
     >
-      {/* <Text
+      <Text
         strong
         style={{
           padding: "12px 20px",
         }}
       >
         {user?.name}
-      </Text> */}
+      </Text>
       <div
         style={{
           borderTop: "1px solid #d9d9d9",
@@ -41,6 +41,7 @@ export const CurrentUser = () => {
       >
         <Button
           style={{ textAlign: "left" }}
+          // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
           icon={<SettingOutlined />}
           type="text"
           block
@@ -61,20 +62,20 @@ export const CurrentUser = () => {
         overlayInnerStyle={{ padding: 0 }}
         overlayStyle={{ zIndex: 999 }}
       >
-        {/* <CustomAvatar
+        <CustomAvatar
           name={user?.name}
           src={user?.avatarUrl}
           size="default"
           style={{ cursor: "pointer" }}
-        /> */}
+        />
       </Popover>
-      {/* {user && (
+      {user && (
         <AccountSettings
           opened={opened}
           setOpened={setOpened}
           userId={user.id}
         />
-      )} */}
+      )}
     </>
   );
 };

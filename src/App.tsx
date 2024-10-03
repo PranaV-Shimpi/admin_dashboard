@@ -1,22 +1,33 @@
-import { BrowserRouter,Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 
 import { RefineThemes, useNotificationProvider } from "@refinedev/antd";
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, ErrorComponent, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import routerProvider, {
   CatchAllNavigate,
   DocumentTitleHandler,
+  NavigateToResource,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 
 import { App as AntdApp, ConfigProvider } from "antd";
 
-import { authProvider, dataProvider, liveProvider } from "./providers";
+// import { Layout } from "@/components";
+import { Layout } from "./components/layout/index";
+import { resources } from "@/config/resources";
+import { authProvider, dataProvider, liveProvider } from "@/providers";
+import {
+  CompanyCreatePage,
+  CompanyEditPage,
+  CompanyListPage,
+  DashboardPage,
+  LoginPage,
+  TasksCreatePage,
+  TasksEditPage,
+  TasksListPage,
+} from "@/routes";
 
 import "@refinedev/antd/dist/reset.css";
-
-import {ForgotPassword, Home, Login, Register} from './pages'
-import { Layout } from "./components/layout";
 
 const App = () => {
   return (
@@ -30,6 +41,7 @@ const App = () => {
               liveProvider={liveProvider}
               notificationProvider={useNotificationProvider}
               authProvider={authProvider}
+              resources={resources}
               options={{
                 syncWithLocation: true,
                 warnWhenUnsavedChanges: true,
@@ -38,11 +50,6 @@ const App = () => {
               }}
             >
               <Routes>
-                
-                <Route path="/register" element={<Register />} />
-                <Route path="/login" element={<Login/>} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-
                 <Route
                   element={
                     <Authenticated
@@ -55,13 +62,46 @@ const App = () => {
                     </Authenticated>
                   }
                 >
-                  <Route index element={<Home />} />
+                  <Route index element={<DashboardPage />} />
+
+                  <Route
+                    path="/tasks"
+                    element={
+                      <TasksListPage>
+                        <Outlet />
+                      </TasksListPage>
+                    }
+                  >
+                    <Route path="new" element={<TasksCreatePage />} />
+                    <Route path="edit/:id" element={<TasksEditPage />} />
+                  </Route>
+
+                  <Route path="/companies">
+                    <Route index element={<CompanyListPage />} />
+                    <Route path="new" element={<CompanyCreatePage />} />
+                    <Route path="edit/:id" element={<CompanyEditPage />} />
+                  </Route>
+
+                  <Route path="*" element={<ErrorComponent />} />
+                </Route>
+
+                <Route
+                  element={
+                    <Authenticated
+                      key="authenticated-auth"
+                      fallback={<Outlet />}
+                    >
+                      <NavigateToResource resource="dashboard" />
+                    </Authenticated>
+                  }
+                >
+                  <Route path="/login" element={<LoginPage />} />
                 </Route>
               </Routes>
               <UnsavedChangesNotifier />
               <DocumentTitleHandler />
             </Refine>
-           
+            
           </DevtoolsProvider>
         </AntdApp>
       </ConfigProvider>
